@@ -1,8 +1,22 @@
 import random
 
-def generate_normal():
-    first_row = list(range(1, 10))
-    random.shuffle(first_row)
+def initial_grid():
+    '''
+    Generate a grid with first row filled with shuffled array from 1 to 9
+    others filled with 0 that are undecided numbers
+    :return:
+    '''
+    # first_row = list(range(1, 10))
+    # random.shuffle(first_row)
+    first_row = [8, 4, 3, 7, 5, 9, 1, 6, 2]
+    grid = [[0 for _ in range(9)] for _ in range(9)]
+    for j in range(9):
+        grid[0][j] = first_row[j]
+
+    return grid
+
+def generate_normal(first_row, grid):
+    pass
 
 
 def remains_in_row(i, grid):
@@ -61,6 +75,8 @@ def remains_in_subgrid(i, j, grid):
     True
     >>> remains_in_subgrid(6, 3, grid) == {2, 3, 4, 5, 7, 8, 9}
     True
+    >>> remains_in_subgrid(8, 2, grid) == {1, 2, 4, 8, 9}
+    True
     '''
     start_i = i//3 * 3
     start_j = j//3 * 3
@@ -71,3 +87,8 @@ def remains_in_subgrid(i, j, grid):
             subgrid.append(grid[row_idx][col_idx])
 
     return set(list(range(1, 10))) - set(subgrid)
+
+
+if __name__ == '__main__':
+    grid = initial_grid()
+    print(grid)
