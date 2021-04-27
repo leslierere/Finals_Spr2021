@@ -29,6 +29,12 @@ def generate_normal(grid, i, j):
         next_i, next_j = next_cell(i, j)
         if next_i == -1:
             if is_disjoint(grid):
+                # TODO: add one thermo and try to solve, if multiple solutions, add one more thermo until only one solution
+                puzzle, known_cells = remove_numebrs(grid)
+                thermos = defaultdict(set)
+                add_thermo(grid, thermos, known_cells)
+                solve_puzzle(puzzle, thermos)
+                # TODO: return here
                 print(grid)
             # else:
             #     print("not disjoint")
@@ -67,7 +73,7 @@ def remove_numebrs(grid):
     return puzzle, known_cells
 
 
-def solve_puzzle(grid, thermos):
+def solve_puzzle(puzzle, thermos):
     '''
 
     :param grid:
@@ -75,6 +81,8 @@ def solve_puzzle(grid, thermos):
     :return:
     >>> grid = [[0, 0, 0, 0, 0, 3, 0, 2, 0], [0, 2, 0, 0, 0, 0, 0, 4, 0], [8, 0, 0, 0, 0, 0, 5, 0, 0], [2, 0, 1, 0, 0, 0, 0, 0, 0], [0, 0, 8, 0, 0, 4, 0, 0, 0], [6, 4, 0, 0, 0, 0, 0, 0, 0], [0, 0, 2, 0, 0, 0, 0, 6, 0], [5, 0, 0, 0, 0, 6, 0, 0, 0], [0, 8, 6, 0, 0, 0, 0, 0, 0]]
     '''
+    # start from thermos
+
 
 
 def add_thermo(grid, thermos, known_cells):
@@ -83,6 +91,7 @@ def add_thermo(grid, thermos, known_cells):
     :param grid:
     :param thermos: thermo only starts with known cells, , every thermo is of length 3
     one known cell can be the bulbs of multiple thermos, and sure it can just have at most 4 thermos starting from it
+    format of thermos: {(2, 8): {((1, 8), (0, 8))}, (8, 8): {((8, 7), (8, 6))}, (3, 0): {((2, 0), (1, 0))}, (4, 5): {((3, 5), (2, 5))}})
     :param known_cells:
     :return:
     >>> good_grid = [[1, 5, 7, 6, 4, 3, 8, 2, 9]]
@@ -134,7 +143,7 @@ def add_thermo(grid, thermos, known_cells):
                 thermos[index].add(((i, j-1), (i, j-2)))
                 break
 
-    # print(thermos)
+    print(thermos)
 
 
 def next_cell(i, j):
