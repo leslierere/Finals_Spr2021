@@ -28,3 +28,10 @@ PLAGIARISM IS NOT TOLERATED. From the first commit through all production of doc
 * Targeted Algorithm Analysis:  Regardless of which option you choose, you need to _describe the performance characteristics of at least one critical part of your program and explain why you chose the data structures and core algorithm(s) you did_. So for example, if you chose Type #1, what's the Big-O, Big-Theta, or Big-Omega run-time complexity of your puzzle solver? Or the puzzle generator? If you're doing Type #2, what's the complexity of your heuristic evaluation function used for pruning?
 * If your team has more than one student, take efforts to see that everyone makes git commits. In addition, your README documentation should include a summary of how you shared the work.
 * Live in-class presentation of your work.
+
+
+## addons
+* disjoint subset  
+a digit can never appear twice in the same cell within different 3x3 boxes
+* Thermo rule  
+digits increase along the thermos from bulbs to the end
