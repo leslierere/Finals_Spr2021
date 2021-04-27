@@ -1,5 +1,6 @@
 import random
 
+
 def initial_grid():
     '''
     Generate a grid with first row filled with shuffled array from 1 to 9
@@ -15,8 +16,42 @@ def initial_grid():
 
     return grid
 
-def generate_normal(first_row, grid):
+
+def generate_normal(grid, row_i, row_j):
+    # if row_i == len(grid)-1:
+    #     if row_j == len(grid)
+    # for j in range(len(grid[0])):
+    #     row_set = remains_in_row(row_i, grid)
+    #     col_set = remains_in_col(j, grid)
+    #     subgrid_set = remains_in_subgrid(row_i, j, grid)
+    #     remains_set = row_set&col_set&subgrid_set
+    #     remains_list = list(remains_set)
+    #     for element in
     pass
+
+
+def next_cell(i, j):
+    '''
+    Given the cell which is just filled with a number, find the next cell to fill, and we will fill row by row
+    :param i:
+    :param j:
+    :return:
+    >>> next_cell(0, 0)
+    (0, 1)
+    >>> next_cell(0, 8)
+    (1, 0)
+    >>> next_cell(8, 8)
+    (-1, -1)
+    '''
+    row_j = j+1
+    row_i = i
+    if row_j==9:
+        row_j = 0
+        row_i+=1
+    if row_i==9:
+        return (-1, -1)
+    return (row_i, row_j)
+
 
 
 def remains_in_row(i, grid):
@@ -91,4 +126,5 @@ def remains_in_subgrid(i, j, grid):
 
 if __name__ == '__main__':
     grid = initial_grid()
+    generate_normal(grid)
     print(grid)
