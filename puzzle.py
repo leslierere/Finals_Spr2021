@@ -27,7 +27,10 @@ def generate_normal(grid, i, j):
         grid[i][j] = element
         next_i, next_j = next_cell(i, j)
         if next_i == -1:
-            print(grid)
+            if is_disjoint(grid):
+                print(grid)
+            # else:
+            #     print("not disjoint")
         generate_normal(grid, next_i, next_j)
         grid[i][j] = 0
 
@@ -54,6 +57,38 @@ def next_cell(i, j):
         return (-1, -1)
     return (row_i, row_j)
 
+
+def is_disjoint(grid):
+    '''
+
+    :param grid:
+    :return: true if this grid satisfy disjoint set
+    >>> grid = [[8, 4, 3, 7, 5, 9, 1, 6, 2], [1, 2, 9, 8, 3, 6, 4, 5, 7], [5, 6, 7, 1, 2, 4, 8, 9, 3], [2, 1, 8, 3, 9, 5, 6, 7, 4], [3, 9, 6, 2, 4, 7, 5, 1, 8], [4, 7, 5, 6, 1, 8, 2, 3, 9], [7, 8, 4, 5, 6, 3, 9, 2, 1], [9, 5, 1, 4, 7, 2, 3, 8, 6], [6, 3, 2, 9, 8, 1, 7, 4, 5]]
+    >>> is_disjoint(grid)
+    False
+    >>> good_grid = [[1, 5, 7, 6, 4, 3, 8, 2, 9]]
+    >>> good_grid.append([9, 2, 3, 8, 5, 1, 6, 4, 7])
+    >>> good_grid.append([8, 6, 4, 7, 2, 9, 5, 3, 1])
+    >>> good_grid.append([2, 3, 1, 5, 7, 8, 4, 9, 6])
+    >>> good_grid.append([7, 9, 8, 3, 6, 4, 2, 1, 5])
+    >>> good_grid.append([6, 4, 5, 1, 9, 2, 3, 7, 8])
+    >>> good_grid.append([3, 1, 2, 9, 8, 5, 7, 6, 4])
+    >>> good_grid.append([5, 7, 9, 4, 3, 6, 1, 8, 2])
+    >>> good_grid.append([4, 8, 6, 2, 1, 7, 9, 5, 3])
+    >>> is_disjoint(good_grid)
+    True
+    '''
+    for i in range(0, 3):
+        for j in range(0, 3):
+            element = grid[i][j]
+            for d_i in range(3):
+                for d_j in range(3):
+                    if d_i==0 and d_j ==0:
+                        continue
+                    if grid[i+d_i*3][j+d_j*3] == element:
+                        # print(i, j, i+ d_i, j + d_j, element)
+                        return False
+    return True
 
 
 def remains_in_row(i, grid):
