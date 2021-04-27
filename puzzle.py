@@ -17,17 +17,19 @@ def initial_grid():
     return grid
 
 
-def generate_normal(grid, row_i, row_j):
-    # if row_i == len(grid)-1:
-    #     if row_j == len(grid)
-    # for j in range(len(grid[0])):
-    #     row_set = remains_in_row(row_i, grid)
-    #     col_set = remains_in_col(j, grid)
-    #     subgrid_set = remains_in_subgrid(row_i, j, grid)
-    #     remains_set = row_set&col_set&subgrid_set
-    #     remains_list = list(remains_set)
-    #     for element in
-    pass
+def generate_normal(grid, i, j):
+    row_set = remains_in_row(i, grid)
+    col_set = remains_in_col(j, grid)
+    subgrid_set = remains_in_subgrid(i, j, grid)
+    remains_set = row_set&col_set&subgrid_set
+    remains_list = list(remains_set)
+    for element in remains_list:
+        grid[i][j] = element
+        next_i, next_j = next_cell(i, j)
+        if next_i == -1:
+            print(grid)
+        generate_normal(grid, next_i, next_j)
+        grid[i][j] = 0
 
 
 def next_cell(i, j):
@@ -126,5 +128,5 @@ def remains_in_subgrid(i, j, grid):
 
 if __name__ == '__main__':
     grid = initial_grid()
-    generate_normal(grid)
-    print(grid)
+    generate_normal(grid, 1, 0)
+    # print(grid)
