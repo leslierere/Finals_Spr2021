@@ -30,13 +30,29 @@ def generate_normal(grid, i, j):
         next_i, next_j = next_cell(i, j)
         if next_i == -1:
             if is_disjoint(grid):
-                # TODO: add one thermo and try to solve, if multiple solutions, add one more thermo until only one solution
-                puzzle, known_cells = remove_numebrs(grid)
-                thermos = defaultdict(set)
-                add_thermo(grid, thermos, known_cells)
-                solve_puzzle(puzzle, thermos)
-                # TODO: return here
+                print("One grid generated")
                 print(grid)
+                # TODO: add 2 thermos and try to solve, if multiple solutions, add one more thermo until only one solution
+                puzzle, known_cells = remove_numebrs(grid)
+                copy_puzzle = deepcopy(puzzle)
+                thermos = defaultdict(list)
+                add_thermo(grid, thermos, known_cells)
+                add_thermo(grid, thermos, known_cells)
+                start_i, start_j = (0, 0)
+                solutions = []
+                while puzzle[start_i][start_j] != 0: # need start with an empty cell
+                    start_i, start_j = next_cell(start_i, start_j)
+
+                solve_puzzle(start_i, start_j, puzzle, thermos, solutions)
+                while len(solutions)>1:
+                    add_thermo(grid, thermos, known_cells)
+                    solutions.clear()
+                    solve_puzzle(start_i, start_j, puzzle, thermos, solutions)
+
+                if len(solutions)==1:
+                    print("Get one with just one solution")
+                    print("grid:\n", grid,"\npuzzle:\n", copy_puzzle, "\nsolutions:\n", solutions, "\nthermos:\n", thermos)
+                    exit(0) # return doesn't work
             # else:
             #     print("not disjoint")
         generate_normal(grid, next_i, next_j)
@@ -66,10 +82,12 @@ def remove_numebrs(grid):
         random.shuffle(col_indexes)
         col_0 = col_indexes[0]
         col_1 = col_indexes[1]
+        col_2 = col_indexes[2]
         known_cells.append((i, col_0))
         known_cells.append((i, col_1))
         puzzle[i][col_0] = grid[i][col_0]
         puzzle[i][col_1] = grid[i][col_1]
+        puzzle[i][col_2] = grid[i][col_2]
 
     return puzzle, known_cells
 
@@ -83,29 +101,34 @@ def solve_puzzle(i, j, puzzle, thermos, solutions):
     :param thermos:
     :param solutions:
     :return:
-    >>> puzzle = [[0, 0, 0, 6, 0, 0, 8, 0, 0], [0, 2, 0, 0, 0, 0, 6, 0, 0], [0, 0, 0, 0, 2, 0, 0, 0, 1], [2, 0, 0, 0, 0, 0, 0, 0, 6], [0, 0, 0, 0, 0, 4, 0, 0, 5], [0, 4, 0, 0, 9, 0, 0, 0, 0], [0, 0, 2, 0, 0, 0, 7, 0, 0], [0, 0, 0, 0, 0, 6, 0, 8, 0], [0, 0, 0, 0, 0, 7, 0, 0, 3]]
-    >>> solve_puzzle(0, 0, puzzle, {(1, 1): [((1, 2), (1, 3))]}, [])
+    >>> p = [[0, 0, 0, 6, 0, 0, 8, 0, 0], [0, 2, 0, 0, 0, 0, 6, 0, 0], [0, 0, 0, 0, 2, 0, 0, 0, 1], [2, 0, 0, 0, 0, 0, 0, 0, 6], [0, 0, 0, 0, 0, 4, 0, 0, 5], [0, 4, 0, 0, 9, 0, 0, 0, 0], [0, 0, 2, 0, 0, 0, 7, 0, 0], [0, 0, 0, 0, 0, 6, 0, 8, 0], [0, 0, 0, 0, 0, 7, 0, 0, 3]]
+    >>> solve_puzzle(0, 0, p, {(1, 1): [((1, 2), (1, 3))]}, [])
     '''
-
     row_set = remains_in_row(i, puzzle)
     col_set = remains_in_col(j, puzzle)
     subgrid_set = remains_in_subgrid(i, j, puzzle)
     remains_set = row_set & col_set & subgrid_set
-    remains_list = list(remains_set)
+    remains_list = sorted(list(remains_set))
     for element in remains_list:
         puzzle[i][j] = element
         next_i, next_j = next_cell(i, j)
-        while puzzle[next_i][next_j] != 0 and next_i != -1:
-            next_i, next_j = next_cell(i, j)
+        while next_i!=-1 and puzzle[next_i][next_j] != 0:
+            next_i, next_j = next_cell(next_i, next_j)
 
-        if next_i == -1: # fill all the cells
+        if next_i == -1: # all the cells are filled
+            # print("all the cells are filled")
             if is_disjoint(puzzle) and satisfy_thermos(puzzle, thermos):
-                if len(solutions)!= 0: # already has a solution
+                one_solution = deepcopy(puzzle)
+                print("one solution generated!\n", one_solution, "\n")
+                solutions.append(one_solution)
+                if len(solutions)> 1: # already has a solution
+                    print("has more than one solution!")
+                    puzzle[i][j] = 0
                     return False
-                solutions.append(deepcopy(puzzle))
         else:
-            solve_puzzle(next_i, next_j, puzzle, thermos, solutions)
-            puzzle[i][j] = 0
+            if not solve_puzzle(next_i, next_j, puzzle, thermos, solutions):
+                return False
+    puzzle[i][j] = 0
     return True
 
 
