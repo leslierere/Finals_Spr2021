@@ -110,7 +110,34 @@ def solve_puzzle(i, j, puzzle, thermos, solutions):
 
 
 def satisfy_thermos(puzzle, thermos):
-    pass
+    '''
+    see if all filled puzzle satisfy all the thermos constaints
+    :param puzzle:
+    :param thermos:
+    :return:
+    >>> good_grid = [[1, 5, 7, 6, 4, 3, 8, 2, 9]]
+    >>> good_grid.append([9, 2, 3, 8, 5, 1, 6, 4, 7])
+    >>> good_grid.append([8, 6, 4, 7, 2, 9, 5, 3, 1])
+    >>> good_grid.append([2, 3, 1, 5, 7, 8, 4, 9, 6])
+    >>> good_grid.append([7, 9, 8, 3, 6, 4, 2, 1, 5])
+    >>> good_grid.append([6, 4, 5, 1, 9, 2, 3, 7, 8])
+    >>> good_grid.append([3, 1, 2, 9, 8, 5, 7, 6, 4])
+    >>> good_grid.append([5, 7, 9, 4, 3, 6, 1, 8, 2])
+    >>> good_grid.append([4, 8, 6, 2, 1, 7, 9, 5, 3])
+    >>> thermos = {(1, 1): [((1, 2), (1, 3))], (4, 5): [((3, 5), (2, 5))], (2, 8): [((1, 8), (0, 8)), ((2, 7), (2, 6))]}
+    >>> satisfy_thermos(good_grid, thermos)
+    True
+    '''
+    for bulb in thermos:
+        bulb_i, bulb_j = bulb
+        # print(bulb)
+        for cells in thermos[bulb]:
+            # print(cells)
+            cell1_i, cell1_j = cells[0]
+            cell2_i, cell2_j = cells[1]
+            if not (puzzle[bulb_i][bulb_j] < puzzle[cell1_i][cell1_j] and puzzle[cell1_i][cell1_j] < puzzle[cell2_i][cell2_j]):
+                return False
+    return True
 
 
 def add_thermo(grid, thermos, known_cells):
