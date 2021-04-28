@@ -1,5 +1,6 @@
 import random
 from collections import defaultdict
+from copy import deepcopy
 
 
 def initial_grid():
@@ -73,16 +74,43 @@ def remove_numebrs(grid):
     return puzzle, known_cells
 
 
-def solve_puzzle(puzzle, thermos):
+def solve_puzzle(i, j, puzzle, thermos, solutions):
     '''
 
-    :param grid:
+    :param i: the row index of the next cell to fill
+    :param j: the col index of the next cell to fill
+    :param puzzle:
     :param thermos:
+    :param solutions:
     :return:
-    >>> grid = [[0, 0, 0, 0, 0, 3, 0, 2, 0], [0, 2, 0, 0, 0, 0, 0, 4, 0], [8, 0, 0, 0, 0, 0, 5, 0, 0], [2, 0, 1, 0, 0, 0, 0, 0, 0], [0, 0, 8, 0, 0, 4, 0, 0, 0], [6, 4, 0, 0, 0, 0, 0, 0, 0], [0, 0, 2, 0, 0, 0, 0, 6, 0], [5, 0, 0, 0, 0, 6, 0, 0, 0], [0, 8, 6, 0, 0, 0, 0, 0, 0]]
+    >>> puzzle = [[0, 0, 0, 6, 0, 0, 8, 0, 0], [0, 2, 0, 0, 0, 0, 6, 0, 0], [0, 0, 0, 0, 2, 0, 0, 0, 1], [2, 0, 0, 0, 0, 0, 0, 0, 6], [0, 0, 0, 0, 0, 4, 0, 0, 5], [0, 4, 0, 0, 9, 0, 0, 0, 0], [0, 0, 2, 0, 0, 0, 7, 0, 0], [0, 0, 0, 0, 0, 6, 0, 8, 0], [0, 0, 0, 0, 0, 7, 0, 0, 3]]
+    >>> solve_puzzle(0, 0, puzzle, {(1, 1): [((1, 2), (1, 3))]}, [])
     '''
-    # start from thermos
 
+    row_set = remains_in_row(i, puzzle)
+    col_set = remains_in_col(j, puzzle)
+    subgrid_set = remains_in_subgrid(i, j, puzzle)
+    remains_set = row_set & col_set & subgrid_set
+    remains_list = list(remains_set)
+    for element in remains_list:
+        puzzle[i][j] = element
+        next_i, next_j = next_cell(i, j)
+        while puzzle[next_i][next_j] != 0 and next_i != -1:
+            next_i, next_j = next_cell(i, j)
+
+        if next_i == -1: # fill all the cells
+            if is_disjoint(puzzle) and satisfy_thermos(puzzle, thermos):
+                if len(solutions)!= 0: # already has a solution
+                    return False
+                solutions.append(deepcopy(puzzle))
+        else:
+            solve_puzzle(next_i, next_j, puzzle, thermos, solutions)
+            puzzle[i][j] = 0
+    return True
+
+
+def satisfy_thermos(puzzle, thermos):
+    pass
 
 
 def add_thermo(grid, thermos, known_cells):
@@ -91,7 +119,7 @@ def add_thermo(grid, thermos, known_cells):
     :param grid:
     :param thermos: thermo only starts with known cells, , every thermo is of length 3
     one known cell can be the bulbs of multiple thermos, and sure it can just have at most 4 thermos starting from it
-    format of thermos: {(2, 8): {((1, 8), (0, 8))}, (8, 8): {((8, 7), (8, 6))}, (3, 0): {((2, 0), (1, 0))}, (4, 5): {((3, 5), (2, 5))}})
+    format of thermos: {(1, 1): [((1, 2), (1, 3))], (4, 5): [((3, 5), (2, 5))], (2, 8): [((1, 8), (0, 8)), ((2, 7), (2, 6))]}
     :param known_cells:
     :return:
     >>> good_grid = [[1, 5, 7, 6, 4, 3, 8, 2, 9]]
@@ -105,7 +133,7 @@ def add_thermo(grid, thermos, known_cells):
     >>> good_grid.append([4, 8, 6, 2, 1, 7, 9, 5, 3])
     >>> grid = [[0, 0, 0, 6, 0, 0, 8, 0, 0], [0, 2, 0, 0, 0, 0, 6, 0, 0], [0, 0, 0, 0, 2, 0, 0, 0, 1], [2, 0, 0, 0, 0, 0, 0, 0, 6], [0, 0, 0, 0, 0, 4, 0, 0, 5], [0, 4, 0, 0, 9, 0, 0, 0, 0], [0, 0, 2, 0, 0, 0, 7, 0, 0], [0, 0, 0, 0, 0, 6, 0, 8, 0], [0, 0, 0, 0, 0, 7, 0, 0, 3]]
     >>> known_cells = [(0, 6), (0, 3), (1, 6), (1, 1), (2, 4), (2, 8), (3, 0), (3, 8), (4, 5), (4, 8), (5, 4), (5, 1), (6, 2), (6, 6), (7, 5), (7, 7), (8, 8), (8, 5)]
-    >>> thermos = defaultdict(set)
+    >>> thermos = defaultdict(list)
     >>> add_thermo(good_grid, thermos, known_cells)
     >>> add_thermo(good_grid, thermos, known_cells)
     >>> add_thermo(good_grid, thermos, known_cells)
@@ -122,25 +150,25 @@ def add_thermo(grid, thermos, known_cells):
         # go upward
         if i>1 and grid[i][j]< grid[i-1][j] and grid[i-1][j]< grid[i-2][j]:
             if index not in thermos or ((i-1, j), (i-2, j)) not in thermos[index]:
-                thermos[index].add(((i-1, j), (i-2, j)))
+                thermos[index].append(((i-1, j), (i-2, j)))
                 break
 
         # go downward
         if i<7 and grid[i][j]< grid[i+1][j] and grid[i+1][j] < grid[i+2][j]:
             if index not in thermos or ((i+1, j), (i+2, j)) not in thermos[index]:
-                thermos[index].add(((i+1, j), (i+2, j)))
+                thermos[index].append(((i+1, j), (i+2, j)))
                 break
 
         # go right
         if j<7 and grid[i][j]< grid[i][j+1] and grid[i][j+1] < grid[i][j+2]:
             if index not in thermos or ((i, j+1), (i, j+2)) not in thermos[index]:
-                thermos[index].add(((i, j+1), (i, j+2)))
+                thermos[index].append(((i, j+1), (i, j+2)))
                 break
 
         # go left
         if j>1 and grid[i][j]< grid[i][j-1] and grid[i][j-1] < grid[i][j-2]:
             if index not in thermos or ((i, j-1), (i, j-2)) not in thermos[index]:
-                thermos[index].add(((i, j-1), (i, j-2)))
+                thermos[index].append(((i, j-1), (i, j-2)))
                 break
 
     print(thermos)
