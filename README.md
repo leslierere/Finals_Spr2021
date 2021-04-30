@@ -30,8 +30,26 @@ PLAGIARISM IS NOT TOLERATED. From the first commit through all production of doc
 * Live in-class presentation of your work.
 
 
-## addons
-* disjoint subset  
+
+
+## option1
+### modify soduku
+* Disjoint subset  
 a digit can never appear twice in the same cell within different 3x3 boxes
 * Thermo rule  
-digits increase along the thermos from bulbs to the end
+digits increase along the thermos from bulbs to the end, and in my implementation, I only created thermos of lengh 3, without turning, and the bulbs are always at the known cells in the puzzle.
+
+
+
+## Analysis of Puzzle Generator
+
+#### Performance characteristics
+
+* Say 9 is n, which is the board width/height.
+
+* For the first row, I use random.shuffle() to shuffle numbers from 1 to 9, the time complexity is O(n), referring to [https://softwareengineering.stackexchange.com/a/215780](https://softwareengineering.stackexchange.com/a/215780)
+
+* For other rows, I will get an intersection of 3 sets which are the remaining numbers in a row, coloumn, or subgrid, to get one set, the time complexity is O(n), to get 3, is still O(n), and to get the intersection, it is still O(n). For such process, I will go over all other cells which is O(n^2). So overall, it is O(n^3)
+
+* And after populate one grid, I will check if this is a disjoint soduku, and I will just check every cell in the first grid, and compare one by one in it compared to other 8 sub grids, time complexity should be O(n^2)
+* In sum, time complexity is O(n^3)
