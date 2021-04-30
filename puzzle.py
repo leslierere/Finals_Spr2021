@@ -11,7 +11,7 @@ def initial_grid():
     '''
     first_row = list(range(1, 10))
     random.shuffle(first_row)
-    first_row = [8, 4, 3, 7, 5, 9, 1, 6, 2] # for debug only
+    #first_row = [8, 4, 3, 7, 5, 9, 1, 6, 2] # for debug only
     grid = [[0 for _ in range(9)] for _ in range(9)]
     for j in range(9):
         grid[0][j] = first_row[j]

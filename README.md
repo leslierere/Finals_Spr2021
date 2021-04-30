@@ -35,9 +35,12 @@ PLAGIARISM IS NOT TOLERATED. From the first commit through all production of doc
 ## option1
 ### modify soduku
 * Disjoint subset  
-a digit can never appear twice in the same cell within different 3x3 boxes
+  a digit can never appear twice in the same cell within different 3x3 boxes
+
 * Thermo rule  
-digits increase along the thermos from bulbs to the end, and in my implementation, I only created thermos of lengh 3, without turning, and the bulbs are always at the known cells in the puzzle.
+  digits increase along the thermos from bulbs to the end, and in my implementation, I only created thermos of lengh 3, without turning, and the bulbs are always at the known cells in the puzzle.
+
+  ![IMG_1261](https://tva1.sinaimg.cn/large/008i3skNly1gq24igxfzxj30p00p6tah.jpg)
 
 
 
