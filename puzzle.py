@@ -30,7 +30,7 @@ def generate_normal(grid, i, j):
         next_i, next_j = next_cell(i, j)
         if next_i == -1:
             if is_disjoint(grid):
-                print("One grid generated")
+                print("==============================================================================\nOne grid generated")
                 print(grid)
                 # TODO: add 2 thermos and try to solve, if multiple solutions, add one more thermo until only one solution
                 puzzle, known_cells = remove_numebrs(grid)
@@ -50,7 +50,8 @@ def generate_normal(grid, i, j):
                     solve_puzzle(start_i, start_j, puzzle, thermos, solutions)
 
                 if len(solutions)==1:
-                    print("Get one with just one solution")
+                    print("---------------------------------------------------------------------")
+                    print("Get one with just one solution!!!!!!!!!!!!!!!!!!!!!!!")
                     print("grid:\n", grid,"\npuzzle:\n", copy_puzzle, "\nsolutions:\n", solutions, "\nthermos:\n", thermos)
                     exit(0) # return doesn't work
             # else:
@@ -119,7 +120,7 @@ def solve_puzzle(i, j, puzzle, thermos, solutions):
             # print("all the cells are filled")
             if is_disjoint(puzzle) and satisfy_thermos(puzzle, thermos):
                 one_solution = deepcopy(puzzle)
-                print("one solution generated!\n", one_solution, "\n")
+                print("one solution generated!\n", one_solution)
                 solutions.append(one_solution)
                 if len(solutions)> 1: # already has a solution
                     print("has more than one solution!")
@@ -221,7 +222,7 @@ def add_thermo(grid, thermos, known_cells):
                 thermos[index].append(((i, j-1), (i, j-2)))
                 break
 
-    print(thermos)
+    print("Current thermos: ", thermos)
 
 
 def next_cell(i, j):
