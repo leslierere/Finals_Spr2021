@@ -73,9 +73,9 @@ def print_puzzle(puzzle, thermo):
         row = ""
         for j in range(len(puzzle[0])):
             if (i, j) in thermo:
-                row += cs(str(puzzle[i][j]), "DarkViolet2", "lightgrey6") + " "
+                row += cs(str(puzzle[i][j]), "Red", "lightgrey6") + " "
             elif (i,j) in in_thermos:
-                row += cs(str(puzzle[i][j]), "DarkViolet2", "lightgrey6") + " "
+                row += cs(str(puzzle[i][j]), "Black", "lightgrey6") + " "
             else:
                 row += str(puzzle[i][j]) + " "
         print(row)
