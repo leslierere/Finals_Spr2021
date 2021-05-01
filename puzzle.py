@@ -1,6 +1,7 @@
 import random
 from collections import defaultdict
 from copy import deepcopy
+from stringcolor import *
 
 
 def initial_grid():
@@ -52,12 +53,34 @@ def generate_normal(grid, i, j):
                 if len(solutions)==1:
                     print("---------------------------------------------------------------------")
                     print("Get one with just one solution!!!!!!!!!!!!!!!!!!!!!!!")
-                    print("grid:\n", grid,"\npuzzle:\n", copy_puzzle, "\nsolutions:\n", solutions, "\nthermos:\n", thermos)
+                    print("grid:\n", grid, "\n\n")
+                    print_puzzle(copy_puzzle, thermos)
                     exit(0) # return doesn't work
             # else:
             #     print("not disjoint")
         generate_normal(grid, next_i, next_j)
         grid[i][j] = 0
+
+def print_puzzle(puzzle, thermo):
+    print("puzzle:")
+    in_thermos = set()
+    for indexs in thermo.values():
+        for two in indexs:
+            for one in two:
+                in_thermos.add(one)
+
+    for i in range(len(puzzle)):
+        row = ""
+        for j in range(len(puzzle[0])):
+            if (i, j) in thermo:
+                row += cs(str(puzzle[i][j]), "DarkViolet2", "lightgrey6") + " "
+            elif (i,j) in in_thermos:
+                row += cs(str(puzzle[i][j]), "DarkViolet2", "lightgrey6") + " "
+            else:
+                row += str(puzzle[i][j]) + " "
+        print(row)
+
+
 
 
 def remove_numebrs(grid):

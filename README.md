@@ -56,3 +56,4 @@ PLAGIARISM IS NOT TOLERATED. From the first commit through all production of doc
 
 * And after populate one grid, I will check if this is a disjoint soduku, and I will just check every cell in the first grid, and compare one by one in it compared to other 8 sub grids, time complexity should be O(n^2)
 * In sum, time complexity is O(n^3)
+* TODO: include the solver first
